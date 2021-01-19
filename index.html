@@ -3,31 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="./style.css">
     <title>OMDB</title>
 </head>
 <body>
     <div id="mainContainer">
-        <div id="searchBox"></div>
+        <div id="searchBox">
+            <div id="searchboxTitlesection"><h1 id="serchboxTitle">
+                Movie title
+            </h1></div>
+            <div id="searchboxInput">
+                <input type="text" name="serchWord" id="input" placeholder="Enter a keyword">
+                <button type="submit" id="search"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
         <div id="searchResaults">
-            <div class="searchResItem" id="searchResaultstitle"></div>
-            <div class="searchResItem"></div>
-            <div class="searchResItem"></div>
-            <div class="searchResItem"></div>
-            <div class="searchResItem"></div>
-            <div class="searchResItem"></div>
-            <div class="searchResItem"></div>
-            <div class="searchResItem"></div>
+            <div class="searchResItem" id="searchResaultstitle"><h1 class="sectionTitle">search resaults</h1></div>
+            <div class="searchResItem">
+                <div class="cardPoster">
+                    <img src="https://m.media-amazon.com/images/M/MV5BMDdmZGU3NDQtY2E5My00ZTliLWIzOTUtMTY4ZGI1YjdiNjk3XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_SX300.jpg" alt="poster" class="poster">
+                </div>
+                <div class="cardTitle"><h1 class="title">Titanic</h1></div>
+                <div class="cardDescription"><p class="descreption">1998</p></div>
+                <div class="cardButton"><button type="submit" class="nominate">Nominate</button></div>
+            </div>
+            <div class="searchResItem">
+                <img src="./loading.gif" alt="loading" id="loading">
+            </div>
+           
         </div>
         <div id="nomineeList">
-            <div class="nominee" id="nomineeListTitle"></div>
+            <div class="nominee" id="nomineeListTitle"><h1 class="sectionTitle">List of Nominees</h1></div>
             <div class="nominee">
                 <div class="cardPoster">
                     <img src="https://m.media-amazon.com/images/M/MV5BMDdmZGU3NDQtY2E5My00ZTliLWIzOTUtMTY4ZGI1YjdiNjk3XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_SX300.jpg" alt="poster" class="poster">
                 </div>
                 <div class="cardTitle"><h1 class="title">Titanic</h1></div>
-                <div class="cardDescription"><p class="descreptio">1998</p></div>
-                <div class="nomonate"><button type="submit">Nominate</button></div>
+                <div class="cardDescription"><p class="descreption">1998</p></div>
+                <div class="cardButton"><button type="submit" class="delete">Delete</button></div>
             </div>
             
             
