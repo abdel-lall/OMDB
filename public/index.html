@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <title>OMDB</title>
+  </head>
+  <body>
+    
+    <div id="mainContainer">
+      <div id="searchBox">
+        <div id="searchboxTitlesection">
+          <h1 id="serchboxTitle">Movie title</h1>
+        </div>
+        <div id="searchboxInput">
+          <input
+            type="text"
+            name="serchWord"
+            id="input"
+            placeholder="Enter a keyword"
+          />
+          <button type="submit" id="search">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </div>
+      <div id="searchResaults">
+        <div class="searchResItem" id="searchResaultstitle">
+          <h1 class="sectionTitle" id="searchresTitleText">search resaults</h1>
+        </div>
+      </div>
+      <div id="nomineeList">
+        <div class="nominee" id="nomineeListTitle">
+          <h1 class="sectionTitle">List of Nominees</h1>
+        </div>
+      </div>
+    </div>
+    <div id="myModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="alert"></p>
+      </div>
+    </div>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-database.js"></script>
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-analytics.js"></script>
+    <script src="./javascript.js"></script>
+  </body>
+</html>

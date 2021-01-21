@@ -1,0 +1,254 @@
+@font-face {
+    font-family: 'oscar';
+    src: url('./Futura\ Light.ttf') format('ttf');
+  }
+body{
+    background-color: #eedfcc;
+}
+#mainContainer{
+    display: grid;
+    grid-gap: 30px;
+    grid-template-columns: repeat(auto-fit,minmax(320px,1fr)) ;
+    grid-template-rows: repeat(2,auto);
+    max-width: 960px;
+    margin: 0 auto;
+    margin-top: 60px;
+    
+}
+#searchBox{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2,1fr);
+    height: 150px;
+    background-color:white;
+    grid-column-start: 1;
+    grid-column-end: -1;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 15px;
+}
+#searchboxTitlesection{
+    grid-row: 1/2;
+    
+    justify-self: center;
+    align-self: center;
+}
+#serchboxTitle{
+    font-family: 'oscar', Verdana, sans-serif;
+    color: #b35a6d;
+    font-weight: 100;
+    text-transform: uppercase;
+    font-size: large;
+}
+#searchboxInput{
+    grid-row: 2/-1;
+    
+    width: 95%;
+    justify-self: center;
+    align-self: start;
+}
+#search{
+    display: inline-block;
+    box-sizing: border-box;
+    width: 50px;
+    height: 50px;
+    margin-right: -50px;
+    font-size: 20px;
+    background-color: white;
+    border: none;
+    border: 1px solid #b35a6d;
+    border-radius: 0px 7px 7px 0px;
+    color: #b35a6d;
+}
+#input{
+    box-sizing: border-box;
+    width: calc(100% - 50px) ;
+    height: 50px;
+    border: none;
+    border: 1px solid #b35a6d;
+    border-radius: 7px 0px 0px 7px;
+    font-size: 20px;
+    padding-left: 20px;
+    color: #b35a6d;
+}
+#input:focus{
+    border: 1px solid #b35a6d;
+    box-shadow: none;
+    outline: none;
+}
+#searchResaults{
+   display: grid;
+   grid-template-rows: repeat(auto-fill,auto);
+   grid-gap: 30px;
+   align-content: start;
+   
+}
+.searchResItem{
+    height: 150px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 15px;
+}
+#nomineeList{
+    display: grid;
+   grid-template-rows: repeat(auto-fill,auto);
+   grid-gap: 30px;
+   align-content: start;
+
+}
+#searchResaultstitle,#nomineeListTitle{
+    grid-column: 1/-1;
+    grid-row: 1/-1;
+    height: 80px;
+}
+.sectionTitle{
+    grid-column: 1/-1;
+    grid-row: 1/-1;
+    justify-self: center;
+    align-self: center;
+    font-size: large;
+    font-family: 'oscar', Verdana, sans-serif;
+    font-weight: 100;
+    color: #b35a6d;
+    text-transform: uppercase;
+    text-align: center;
+
+}
+#loading{
+    grid-column: 1/-1;
+    grid-row: 1/-1;
+    justify-self: center;
+    align-self: center;
+    height: 40px;
+    width: auto;
+}
+.nominee,.searchResItem{
+    height: 150px;
+    background-color: white;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    grid-template-rows: repeat(3,1fr);
+    grid-gap: 5px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 15px;
+    
+}
+.cardPoster{
+   
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: -1;
+
+}
+.poster{
+    height: 150px;
+    width: auto;
+    max-width: 100%;
+    border-radius: 15px 0px 0px 15px;
+}
+.cardTitle{
+    grid-column-start: 2;
+    grid-column-end: -1;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+.title{
+    font-family: 'oscar', Verdana, sans-serif;
+    font-size: medium;
+    font-weight: 100;
+    color: #b35a6d;
+}
+.cardDescription{
+    grid-column-start: 2;
+    grid-column-end: -1;
+    grid-row-start: 2;
+    grid-row-end: 3;
+
+}
+.descreption{
+    color: #a8a8a8;
+    align-self: top;
+    margin-top: 0px;
+}
+.cardButton{
+    height: 30px;
+    width: auto;
+    font-size: 15px;
+    grid-column:-2/-1;
+    grid-row : -2/-1;
+    justify-self: center;
+    align-self: top;
+}
+.nominate,.delete{
+    font-family: 'oscar', Verdana, sans-serif;
+    background-color: white;
+    border: none;
+    border: 1px solid #b35a6d;
+    border-radius: 5px;
+    padding: 5px;
+    color: #b35a6d;
+}
+.nominate:disabled{
+    border: 1px solid #a8a8a8;
+    color: #a8a8a8;
+}
+.nominate:hover,.delete:hover,#search:hover{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 5px;
+}
+/* -----------------------------modal------------------- */
+/* The Modal (background) */
+.modal {
+    font-family: 'oscar', Verdana, sans-serif;
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+
+
+/* ---------------------------------------------------------- */
+
+@media only screen and (max-width: 640px) {
+    #searchBox{
+        order: 2;
+    }
+    #searchResaults{
+        order: 3;
+    }
+    #nomineeList{
+        order: 1;
+    }
+
+  }
