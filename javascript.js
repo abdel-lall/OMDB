@@ -1,3 +1,4 @@
+// -----------------firebase config ----------------------
 var firebaseConfig = {
   apiKey: "AIzaSyBjlIck1EiCwwSmPmRM_599jio6saG92q4",
   authDomain: "omdb-1d204.firebaseapp.com",
@@ -13,11 +14,12 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 var database = firebase.database();
+// array to store ids of nominees
 var nomineesList = [];
+
 let closeModal = document.getElementsByClassName("close")[0];
-document.getElementById("search").addEventListener("click", () => {
-  console.log("hello");
-});
+
+// onload fetch nomineesList & append resaults, show loading gif
 window.onload = function () {
   toggleLoadingComponent("add", "nominee", "nomineeList");
   database.ref("/movies").once("value", (snap) => {
@@ -39,7 +41,7 @@ window.onload = function () {
     toggleLoadingComponent("rm");
   });
 };
-
+// search click empty div, fetch data from OMDB & append response , show loading gif,
 document.getElementById("search").addEventListener("click", (e) => {
   e.preventDefault();
   document.getElementById(
@@ -61,7 +63,7 @@ document.getElementById("search").addEventListener("click", (e) => {
         addSearchTitle(keyword);
         let resArray = data.Search;
         resArray.forEach((element) => {
-           let btnState = nomineesList.includes(element.imdbID)
+          let btnState = nomineesList.includes(element.imdbID);
           let searchResItem = addSearchResaultItem(
             element.imdbID,
             element.Title,
@@ -74,61 +76,63 @@ document.getElementById("search").addEventListener("click", (e) => {
       }, 1000);
     });
 });
+// click nominate: check if the nominees are less than 5 else show modal, append to nominnes list, push id to nominee array, add nominee to database
 document.getElementById("searchResaults").addEventListener("click", (e) => {
   e.preventDefault();
 
   if (e.target.className == "nominate") {
     e.target.disabled = true;
     if (nomineesList.length < 5) {
-        let id = e.target.dataset.id;
-        let card = document.getElementById(id);
-        let imgUrl = card.querySelector("img").getAttribute("src");
-        let title = card.querySelector(".title").innerText;
-        let year = card.querySelector("p").innerText;
-        nomineesList.push(id)
-        document
-          .getElementById("nomineeList")
-          .append(addNomineeCard(id, title, year, imgUrl));
-        saveNominee(id, title, year, imgUrl);
-        
+      let id = e.target.dataset.id;
+      let card = document.getElementById(id);
+      let imgUrl = card.querySelector("img").getAttribute("src");
+      let title = card.querySelector(".title").innerText;
+      let year = card.querySelector("p").innerText;
+      nomineesList.push(id);
+      document
+        .getElementById("nomineeList")
+        .append(addNomineeCard(id, title, year, imgUrl));
+      saveNominee(id, title, year, imgUrl);
     } else {
-      
       showModal("You can't nominate more than 5 movies");
     }
   }
 });
+// click delete : remove from nominnes list, remove id to nominee array, remove nominee from database
 document.getElementById("nomineeList").addEventListener("click", (e) => {
   e.preventDefault();
   if (e.target.className == "delete") {
     let id = e.target.dataset.id;
 
     let array = document.getElementsByClassName("nominee");
-    console.log(array.length);
     for (i = 0; i < array.length; i++) {
       if (array[i].id == id) {
         database.ref("/movies/" + id).remove();
-        nomineesList = nomineesList.filter(word => word != array[i].id);
+        nomineesList = nomineesList.filter((word) => word != array[i].id);
         array[i].remove();
       }
     }
-    let btnsOfSearchItems = document.getElementsByClassName("nominate")
-    for(j=0;j<btnsOfSearchItems.length;j++){
-        if(btnsOfSearchItems[j].dataset.id == id){
-            btnsOfSearchItems[j].disabled = false
-        }
+    let btnsOfSearchItems = document.getElementsByClassName("nominate");
+    for (j = 0; j < btnsOfSearchItems.length; j++) {
+      if (btnsOfSearchItems[j].dataset.id == id) {
+        btnsOfSearchItems[j].disabled = false;
+      }
     }
   }
 });
+// close modal click close button
 closeModal.onclick = function () {
   let modal = document.getElementById("myModal");
   modal.style.display = "none";
 };
+// close modal with click on window
 window.onclick = function (event) {
   let modal = document.getElementById("myModal");
   if (event.target == modal) {
     modal.style.display = "none";
   }
 };
+// function that returns a nominee card
 function addNomineeCard(id, title, year, imgUrl) {
   let nomineeCard = document.createElement("div");
   nomineeCard.setAttribute("class", "nominee");
@@ -142,7 +146,8 @@ function addNomineeCard(id, title, year, imgUrl) {
 
   return nomineeCard;
 }
-function addSearchResaultItem(id, title, year, imgUrl,state) {
+// function that returns a search resault item card with the state of the button disabeled or not
+function addSearchResaultItem(id, title, year, imgUrl, state) {
   let searchResItem = document.createElement("div");
   searchResItem.setAttribute("class", "searchResItem");
   searchResItem.setAttribute("id", id);
@@ -157,17 +162,19 @@ function addSearchResaultItem(id, title, year, imgUrl,state) {
     <div class="cardDescription"><p class="descreption">${
       year ? year : "year unavailable"
     }</p></div>
-    <div class="cardButton"><button type="submit" class="nominate" data-id=${id} ${state ? "disabled" : ""}>Nominate</button></div>`;
- 
+    <div class="cardButton"><button type="submit" class="nominate" data-id=${id} ${
+    state ? "disabled" : ""
+  }>Nominate</button></div>`;
+
   return searchResItem;
 }
-
+// function that adds the search keyword to search resault title
 function addSearchTitle(keyword) {
   document.getElementById(
     "searchresTitleText"
   ).innerText = `search resaults for "${keyword}"`;
 }
-
+// function that shows the loading gif
 function toggleLoadingComponent(toggle, divClass, apSide) {
   if (toggle == "add") {
     let loadingComponent = document.createElement("div");
@@ -180,13 +187,14 @@ function toggleLoadingComponent(toggle, divClass, apSide) {
     document.getElementById("loadingdiv").remove();
   }
 }
+// function that shows the modal
 function showModal(message) {
   let modal = document.getElementById("myModal");
   let alert = document.getElementById("alert");
   modal.style.display = "block";
   alert.innerText = message;
 }
-
+// function that saves a nominee to the firebase database
 function saveNominee(id, title, year, imgUrl) {
   database.ref("/movies/" + id).set({
     id: id,
