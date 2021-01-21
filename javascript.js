@@ -13,38 +13,45 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 var database = firebase.database();
-
+var nomineesList = [];
 let closeModal = document.getElementsByClassName("close")[0];
 document.getElementById("search").addEventListener("click", () => {
   console.log("hello");
 });
-window.onload = function(){
-    database.ref("/movies").once("value", (snap) => {
-        let res = snap.val();
-        if (res) {
-          let array = Object.keys(res);
-      
-          array.forEach((element) => {
-            let id = res[element].id;
-            let imgUrl = res[element].imgUrl;
-            let title = res[element].title;
-            let year = res[element].year;
-            document
-              .getElementById("nomineeList")
-              .append(addNomineeCard(id, title, year, imgUrl));
-          });
-        }
+window.onload = function () {
+  toggleLoadingComponent("add", "nominee", "nomineeList");
+  database.ref("/movies").once("value", (snap) => {
+    let res = snap.val();
+    if (res) {
+      let array = Object.keys(res);
+
+      array.forEach((element) => {
+        let id = res[element].id;
+        let imgUrl = res[element].imgUrl;
+        let title = res[element].title;
+        let year = res[element].year;
+        nomineesList.push(id);
+        document
+          .getElementById("nomineeList")
+          .append(addNomineeCard(id, title, year, imgUrl));
       });
-}
+    }
+    toggleLoadingComponent("rm");
+  });
+};
 
 document.getElementById("search").addEventListener("click", (e) => {
   e.preventDefault();
-  console.log("click");
+  document.getElementById(
+    "searchResaults"
+  ).innerHTML = `<div class="searchResItem" id="searchResaultstitle">
+  <h1 class="sectionTitle" id="searchresTitleText">search resaults</h1>
+    </div>`;
   let keyword = document.getElementById("input").value;
 
   fetch(`https://www.omdbapi.com/?s=${keyword}&apikey=8905552a`)
     .then((res) => {
-      toggleLoadingComponent("add");
+      toggleLoadingComponent("add", "searchResItem", "searchResaults");
 
       return res.json();
     })
@@ -53,13 +60,14 @@ document.getElementById("search").addEventListener("click", (e) => {
         toggleLoadingComponent("rm");
         addSearchTitle(keyword);
         let resArray = data.Search;
-        console.log(resArray);
         resArray.forEach((element) => {
+           let btnState = nomineesList.includes(element.imdbID)
           let searchResItem = addSearchResaultItem(
             element.imdbID,
             element.Title,
             element.Year,
-            element.Poster
+            element.Poster,
+            btnState
           );
           document.getElementById("searchResaults").append(searchResItem);
         });
@@ -68,16 +76,25 @@ document.getElementById("search").addEventListener("click", (e) => {
 });
 document.getElementById("searchResaults").addEventListener("click", (e) => {
   e.preventDefault();
+
   if (e.target.className == "nominate") {
-    let id = e.target.dataset.id;
-    let card = document.getElementById(id);
-    let imgUrl = card.querySelector("img").getAttribute("src");
-    let title = card.querySelector(".title").innerText;
-    let year = card.querySelector("p").innerText;
-    document
-      .getElementById("nomineeList")
-      .append(addNomineeCard(id, title, year, imgUrl));
-    saveNominee(id, title, year, imgUrl);
+    e.target.disabled = true;
+    if (nomineesList.length < 5) {
+        let id = e.target.dataset.id;
+        let card = document.getElementById(id);
+        let imgUrl = card.querySelector("img").getAttribute("src");
+        let title = card.querySelector(".title").innerText;
+        let year = card.querySelector("p").innerText;
+        nomineesList.push(id)
+        document
+          .getElementById("nomineeList")
+          .append(addNomineeCard(id, title, year, imgUrl));
+        saveNominee(id, title, year, imgUrl);
+        
+    } else {
+      
+      showModal("You can't nominate more than 5 movies");
+    }
   }
 });
 document.getElementById("nomineeList").addEventListener("click", (e) => {
@@ -89,9 +106,16 @@ document.getElementById("nomineeList").addEventListener("click", (e) => {
     console.log(array.length);
     for (i = 0; i < array.length; i++) {
       if (array[i].id == id) {
-        array[i].remove();
         database.ref("/movies/" + id).remove();
+        nomineesList = nomineesList.filter(word => word != array[i].id);
+        array[i].remove();
       }
+    }
+    let btnsOfSearchItems = document.getElementsByClassName("nominate")
+    for(j=0;j<btnsOfSearchItems.length;j++){
+        if(btnsOfSearchItems[j].dataset.id == id){
+            btnsOfSearchItems[j].disabled = false
+        }
     }
   }
 });
@@ -118,7 +142,7 @@ function addNomineeCard(id, title, year, imgUrl) {
 
   return nomineeCard;
 }
-function addSearchResaultItem(id, title, year, imgUrl) {
+function addSearchResaultItem(id, title, year, imgUrl,state) {
   let searchResItem = document.createElement("div");
   searchResItem.setAttribute("class", "searchResItem");
   searchResItem.setAttribute("id", id);
@@ -133,7 +157,8 @@ function addSearchResaultItem(id, title, year, imgUrl) {
     <div class="cardDescription"><p class="descreption">${
       year ? year : "year unavailable"
     }</p></div>
-    <div class="cardButton"><button type="submit" class="nominate" data-id=${id}>Nominate</button></div>`;
+    <div class="cardButton"><button type="submit" class="nominate" data-id=${id} ${state ? "disabled" : ""}>Nominate</button></div>`;
+ 
   return searchResItem;
 }
 
@@ -143,14 +168,14 @@ function addSearchTitle(keyword) {
   ).innerText = `search resaults for "${keyword}"`;
 }
 
-function toggleLoadingComponent(toggle) {
-  let loadingComponent = document.createElement("div");
-  loadingComponent.setAttribute("id", "loadingdiv");
-  loadingComponent.setAttribute("class", "searchResItem");
-  loadingComponent.innerHTML = `<img src="./loading.gif" alt="loading" id="loading">`;
-
+function toggleLoadingComponent(toggle, divClass, apSide) {
   if (toggle == "add") {
-    document.getElementById("searchResaults").append(loadingComponent);
+    let loadingComponent = document.createElement("div");
+    loadingComponent.setAttribute("id", "loadingdiv");
+    loadingComponent.setAttribute("class", divClass);
+    loadingComponent.innerHTML = `<img src="./loading.gif" alt="loading" id="loading">`;
+
+    document.getElementById(apSide).append(loadingComponent);
   } else {
     document.getElementById("loadingdiv").remove();
   }
